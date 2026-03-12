@@ -1,7 +1,7 @@
 #pragma once
 
 #include "const.h"
-
+#include "RedisConPool.h"
 /*redis操作类，因为hredis提供的操作太别扭了，所以手动封装redis操作类，简化调用流程。后续*/
 
 class RedisMgr : public Singleton<RedisMgr>,
@@ -10,10 +10,8 @@ class RedisMgr : public Singleton<RedisMgr>,
     friend class Singleton<RedisMgr>;
 public:
     ~RedisMgr();
-    bool Connect(const std::string& host, int port);
     bool Get(const std::string& key, std::string& value);
     bool Set(const std::string& key, const std::string& value);
-    bool Auth(const std::string& password);
     bool LPush(const std::string& key, const std::string& value);
     bool LPop(const std::string& key, std::string& value);
     bool RPush(const std::string& key, const std::string& value);
@@ -27,6 +25,5 @@ public:
 private:
     RedisMgr();
 
-    redisContext* _connect;
-    redisReply* _reply;
+	std::unique_ptr<RedisConPool> _con_pool;
 };
