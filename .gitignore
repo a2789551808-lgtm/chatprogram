@@ -1,0 +1,44 @@
+# Visual Studio
+.vs/
+*.suo
+*.user
+*.VC.db
+*.vcxproj.user
+
+# Build output
+bin/
+obj/
+Debug/
+Release/
+build/
+
+# Qt build and temporary
+client/build/
+*.pro.user
+*.qmake.stash
+
+# CMake
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+
+# IDE / Editor
+.vscode/
+.idea/
+
+# Logs and databases
+*.log
+*.db
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Other generated resources
+*.o
+*.obj
+*.exe
+*.ilk
+*.pdb
+*.idb
