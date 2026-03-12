@@ -12,7 +12,9 @@
   "dependencies": {
     "@grpc/grpc-js": "^1.14.3",
     "@grpc/proto-loader": "^0.8.0",
+    "ioredis": "^5.10.0",
     "nodemailer": "^8.0.2",
+    "redis": "^5.11.0",
     "uuid": "^13.0.0"
   }
 }

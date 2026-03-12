@@ -4,12 +4,12 @@
       "pass": "ujnljtsxjsupdcfh"
     },
     "mysql": {
-      "host": "localhost",
+      "host": "127.0.0.1",
       "port": 3306
     },
     "redis": {
-      "host": "localhost",
-      "port": 6379,
-      "passwd": ""
+      "host": "127.0.0.1",
+      "port": 6380,
+      "passwd": "121013zjw"
     }
 }

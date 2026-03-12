@@ -21,7 +21,7 @@ let transport = nodemailer.createTransport({
  * @returns 
  */
 function SendMail(mailOptions_){
-    return new Promise(function(resolve, reject){   //promise对象用于处理异步操作,把异步切位同步，resolve和reject分别用于成功和失败的回调函数
+    return new Promise(function(resolve, reject){   //promise对象用于处理异步操作,把异步变成同步，resolve和reject分别用于成功和失败的回调函数
         transport.sendMail(mailOptions_, function(error, info){
             if (error) {
                 console.log(error);
