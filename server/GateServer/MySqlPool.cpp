@@ -177,7 +177,7 @@ std::unique_ptr<SqlConnection> MySqlPool::getConnection() {
 }
 
 void MySqlPool::returnConnection(std::unique_ptr<SqlConnection> con) {
-	std::unique_lock<std::mutex> lock(mutex_);
+	std::unique_lock<std::mutex> lock(mutex_);	//这里可以用lock_guard，但考虑到后续可能会有更复杂的逻辑，先用lock
 	if (b_stop_) {
 		return;
 	}

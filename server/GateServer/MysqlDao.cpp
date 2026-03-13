@@ -21,7 +21,7 @@ int MysqlDao::RegUser(const std::string& name, const std::string& email, const s
 	auto con = pool_->getConnection();
 	try {
 		if (con == nullptr) {
-			return false;
+			return false;	//没取到连接，所以不调用returnConnection，直接返回失败
 		}
 		// 准备调用存储过程
 		std::unique_ptr < sql::PreparedStatement > stmt(con->_con->prepareStatement("CALL reg_user(?,?,?,@result)"));
@@ -30,7 +30,7 @@ int MysqlDao::RegUser(const std::string& name, const std::string& email, const s
 		stmt->setString(2, email);
 		stmt->setString(3, pwd);
 
-		// 由于PreparedStatement不直接支持注册输出参数，我们需要使用会话变量或其他方法来获取输出参数的值
+		// 由于PreparedStatement不直接支持注册输出参数，所以需要使用会话变量或其他方法来获取输出参数的值
 
 		  // 执行存储过程
 		stmt->execute();

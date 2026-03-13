@@ -138,6 +138,7 @@
     <ClCompile Include="message.grpc.pb.cc" />
     <ClCompile Include="message.pb.cc" />
     <ClCompile Include="MysqlDao.cpp" />
+    <ClCompile Include="MysqlMgr.cpp" />
     <ClCompile Include="MySqlPool.cpp" />
     <ClCompile Include="RedisConPool.cpp" />
     <ClCompile Include="RedisMgr.cpp" />
@@ -153,6 +154,7 @@
     <ClInclude Include="message.grpc.pb.h" />
     <ClInclude Include="message.pb.h" />
     <ClInclude Include="MysqlDao.h" />
+    <ClInclude Include="MysqlMgr.h" />
     <ClInclude Include="MySqlPool.h" />
     <ClInclude Include="RedisConPool.h" />
     <ClInclude Include="RedisMgr.h" />
