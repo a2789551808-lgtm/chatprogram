@@ -3,8 +3,8 @@
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
-    <IncludePath>D:\c++ku\redis\deps\hiredis;D:\c++ku\jsoncpp\include;D:\c++ku\boost_1_90_0;$(IncludePath)</IncludePath>
-    <LibraryPath>D:\c++ku\redis\lib;D:\c++ku\jsoncpp\lib;D:\c++ku\boost_1_90_0\stage\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>D:\c++ku\mysql_connector\include;D:\c++ku\redis\deps\hiredis;D:\c++ku\jsoncpp\include;D:\c++ku\boost_1_90_0;$(IncludePath)</IncludePath>
+    <LibraryPath>D:\cppsoft\mysql_connector\lib64\vs14;D:\c++ku\redis\lib;D:\c++ku\jsoncpp\lib;D:\c++ku\boost_1_90_0\stage\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup>
     <Link>
@@ -16,6 +16,10 @@
       <AdditionalIncludeDirectories>D:\c++ku\grpc\grpc\include;D:\c++ku\grpc\grpc\third_party\protobuf\src;D:\c++ku\grpc\grpc\third_party\abseil-cpp;D:\c++ku\grpc\grpc\third_party\address_sorting\include;D:\c++ku\grpc\grpc\third_party\re2;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
+    <PostBuildEvent>
+      <Command>xcopy $(ProjectDir)config.ini  $(SolutionDir)$(Platform)\$(Configuration)\   /y
+xcopy $(ProjectDir)*.dll   $(SolutionDir)$(Platform)\$(Configuration)\   /y</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup />
 </Project>
