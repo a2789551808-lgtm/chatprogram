@@ -31,6 +31,14 @@ private:
     void initHttpHandlers();
     QMap<ReqId, std::function<void(const QJsonObject&)>> _handlers;
 
+    QMap<TipErr, QString> _tip_errs;
+    void AddTipErr(TipErr te,QString tips);
+    void DelTipErr(TipErr te);
+    bool checkUserValid();
+    bool checkEmailValid();
+    bool checkPassValid();
+    bool checkVarifyValid();
+    bool checkConfirmValid();
 };
 
 #endif // REGISTERDIALOG_H
