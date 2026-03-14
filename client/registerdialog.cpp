@@ -2,6 +2,7 @@
 #include "ui_registerdialog.h"
 #include "global.h"
 #include "httpmgr.h"
+#include "clickedlabel.h"
 
 RegisterDialog::RegisterDialog(QWidget *parent)
     : QDialog(parent)
@@ -11,6 +12,34 @@ RegisterDialog::RegisterDialog(QWidget *parent)
     ui->pass_edit->setEchoMode(QLineEdit::Password);
     ui->confirm_edit->setEchoMode(QLineEdit::Password);
 
+    //设置浮动显示手形状
+    ui->pass_visible->setCursor(Qt::PointingHandCursor);
+    ui->confirm_visible->setCursor(Qt::PointingHandCursor);
+    ui->pass_visible->SetState("unvisible","unvisible_hover","","visible",
+                               "visible_hover","");
+    ui->confirm_visible->SetState("unvisible","unvisible_hover","","visible",
+                                  "visible_hover","");
+    //连接点击事件
+    connect(ui->pass_visible, &ClickedLabel::clicked, this, [this]() {
+        auto state = ui->pass_visible->GetCurState();
+        if(state == ClickLbState::Normal){
+            ui->pass_edit->setEchoMode(QLineEdit::Password);
+        }else{
+            ui->pass_edit->setEchoMode(QLineEdit::Normal);
+        }
+        qDebug() << "Label was clicked!";
+    });
+    connect(ui->confirm_visible, &ClickedLabel::clicked, this, [this]() {
+        auto state = ui->confirm_visible->GetCurState();
+        if(state == ClickLbState::Normal){
+            ui->confirm_edit->setEchoMode(QLineEdit::Password);
+        }else{
+            ui->confirm_edit->setEchoMode(QLineEdit::Normal);
+        }
+        qDebug() << "Label was clicked!";
+    });
+
+
     ui->err_tip->setProperty("state", "normal");
     repolish(ui->err_tip);
 
@@ -18,25 +47,21 @@ RegisterDialog::RegisterDialog(QWidget *parent)
             &RegisterDialog::slot_reg_mod_finish);
 
     initHttpHandlers();
-    //day11 设定输入框输入后清空字符串
-    ui->err_tip->clear();
 
+    //设定输入框输入后清空字符串
+    ui->err_tip->clear();
     connect(ui->user_edit,&QLineEdit::editingFinished,this,[this](){
         checkUserValid();
     });
-
     connect(ui->email_edit, &QLineEdit::editingFinished, this, [this](){
         checkEmailValid();
     });
-
     connect(ui->pass_edit, &QLineEdit::editingFinished, this, [this](){
         checkPassValid();
     });
-
     connect(ui->confirm_edit, &QLineEdit::editingFinished, this, [this](){
         checkConfirmValid();
     });
-
     connect(ui->varify_edit, &QLineEdit::editingFinished, this, [this](){
         checkVarifyValid();
     });

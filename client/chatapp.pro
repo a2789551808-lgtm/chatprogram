@@ -10,6 +10,7 @@ DESTDIR = ./bin
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    clickedlabel.cpp \
     global.cpp \
     httpmgr.cpp \
     logindialog.cpp \
@@ -19,6 +20,7 @@ SOURCES += \
     timerbtn.cpp
 
 HEADERS += \
+    clickedlabel.h \
     global.h \
     httpmgr.h \
     logindialog.h \

@@ -65,6 +65,11 @@ enum ErrorCodes{
     ERR_NETWORK = 2,    //网络错误
 };
 
+enum ClickLbState{
+    Normal = 0,
+    Selected = 1
+};
+
 extern QString gate_url_prefix;
 
 
