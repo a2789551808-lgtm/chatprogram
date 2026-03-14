@@ -21,6 +21,10 @@ private slots:
 
     void on_confirm_btn_clicked();
 
+    void on_pushButton_clicked();
+
+    void on_cancel_btn_clicked();
+
 public slots:
     void slot_reg_mod_finish(ReqId id, QString res, ErrorCodes err);
 
@@ -39,6 +43,13 @@ private:
     bool checkPassValid();
     bool checkVarifyValid();
     bool checkConfirmValid();
+
+    void ChangeTipPage();
+    QTimer * _countdown_timer;
+    int _countdown;
+
+signals:
+    void sigSwitchLogin();
 };
 
 #endif // REGISTERDIALOG_H
