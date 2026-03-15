@@ -36,10 +36,10 @@ signals:
     void switchRegister();
     void switchReset();
     void sig_connect_tcp(ServerInfo);
-
+public slots:
+    void slot_forget_pwd();
 private slots:
     void on_login_btn_clicked();
-    void slot_forget_pwd();
     void slot_login_mod_finish(ReqId id, QString res, ErrorCodes err);
 };
 
