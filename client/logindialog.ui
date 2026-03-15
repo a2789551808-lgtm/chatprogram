@@ -25,12 +25,9 @@
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout_2">
+  <layout class="QVBoxLayout" name="verticalLayout_3">
    <item>
-    <layout class="QVBoxLayout" name="verticalLayout">
-     <property name="spacing">
-      <number>7</number>
-     </property>
+    <layout class="QVBoxLayout" name="verticalLayout_2">
      <property name="leftMargin">
       <number>5</number>
      </property>
@@ -44,18 +41,52 @@
       <number>5</number>
      </property>
      <item>
-      <widget class="QWidget" name="widget" native="true">
+      <widget class="QLabel" name="err_tip">
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>25</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>16777215</width>
+         <height>25</height>
+        </size>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QWidget" name="head_widget" native="true">
+       <property name="minimumSize">
+        <size>
+         <width>200</width>
+         <height>230</height>
+        </size>
+       </property>
        <layout class="QGridLayout" name="gridLayout">
-        <item row="0" column="0">
-         <widget class="QLabel" name="label">
+        <item row="1" column="0">
+         <widget class="QLabel" name="head_label">
+          <property name="minimumSize">
+           <size>
+            <width>200</width>
+            <height>200</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>200</width>
+            <height>200</height>
+           </size>
+          </property>
           <property name="text">
            <string/>
-          </property>
-          <property name="pixmap">
-           <pixmap resource="rc.qrc">:/res/ice.png</pixmap>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
           </property>
          </widget>
         </item>
@@ -63,7 +94,7 @@
       </widget>
      </item>
      <item>
-      <spacer name="verticalSpacer">
+      <spacer name="verticalSpacer_3">
        <property name="orientation">
         <enum>Qt::Vertical</enum>
        </property>
@@ -76,12 +107,9 @@
       </spacer>
      </item>
      <item>
-      <layout class="QHBoxLayout" name="horizontalLayout">
-       <property name="spacing">
-        <number>7</number>
-       </property>
+      <layout class="QHBoxLayout" name="horizontalLayout_2">
        <item>
-        <widget class="QLabel" name="user_lable">
+        <widget class="QLabel" name="email_lb">
          <property name="minimumSize">
           <size>
            <width>0</width>
@@ -95,32 +123,48 @@
           </size>
          </property>
          <property name="text">
-          <string>用户: </string>
+          <string>邮箱：</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="user_edit">
+        <widget class="QLineEdit" name="email_edit">
          <property name="minimumSize">
           <size>
            <width>0</width>
-           <height>25</height>
+           <height>30</height>
           </size>
          </property>
          <property name="maximumSize">
           <size>
            <width>16777215</width>
-           <height>25</height>
+           <height>30</height>
           </size>
          </property>
         </widget>
+       </item>
+       <item>
+        <spacer name="horizontalSpacer_6">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeType">
+          <enum>QSizePolicy::Fixed</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>25</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
        </item>
       </layout>
      </item>
      <item>
-      <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <layout class="QHBoxLayout" name="horizontalLayout_3">
        <item>
-        <widget class="QLabel" name="pass_lable">
+        <widget class="QLabel" name="pass_label">
          <property name="minimumSize">
           <size>
            <width>0</width>
@@ -134,7 +178,7 @@
           </size>
          </property>
          <property name="text">
-          <string>密码: </string>
+          <string>密码：</string>
          </property>
         </widget>
        </item>
@@ -143,21 +187,37 @@
          <property name="minimumSize">
           <size>
            <width>0</width>
-           <height>25</height>
+           <height>30</height>
           </size>
          </property>
          <property name="maximumSize">
           <size>
            <width>16777215</width>
-           <height>25</height>
+           <height>30</height>
           </size>
          </property>
         </widget>
        </item>
+       <item>
+        <spacer name="horizontalSpacer_7">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeType">
+          <enum>QSizePolicy::Fixed</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>25</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
       </layout>
      </item>
      <item>
-      <layout class="QHBoxLayout" name="horizontalLayout_3">
+      <layout class="QHBoxLayout" name="horizontalLayout_4">
        <item>
         <spacer name="horizontalSpacer">
          <property name="orientation">
@@ -173,18 +233,6 @@
        </item>
        <item>
         <widget class="ClickedLabel" name="forget_label">
-         <property name="minimumSize">
-          <size>
-           <width>0</width>
-           <height>25</height>
-          </size>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>16777215</width>
-           <height>25</height>
-          </size>
-         </property>
          <property name="text">
           <string>忘记密码</string>
          </property>
@@ -206,7 +254,7 @@
       </spacer>
      </item>
      <item>
-      <layout class="QHBoxLayout" name="horizontalLayout_4">
+      <layout class="QHBoxLayout" name="horizontalLayout_5">
        <item>
         <spacer name="horizontalSpacer_2">
          <property name="orientation">
@@ -223,12 +271,6 @@
        <item>
         <widget class="QPushButton" name="login_btn">
          <property name="minimumSize">
-          <size>
-           <width>100</width>
-           <height>30</height>
-          </size>
-         </property>
-         <property name="maximumSize">
           <size>
            <width>100</width>
            <height>30</height>
@@ -255,9 +297,9 @@
       </layout>
      </item>
      <item>
-      <layout class="QHBoxLayout" name="horizontalLayout_7">
+      <layout class="QHBoxLayout" name="horizontalLayout_6">
        <item>
-        <spacer name="horizontalSpacer_5">
+        <spacer name="horizontalSpacer_4">
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
          </property>
@@ -277,19 +319,13 @@
            <height>30</height>
           </size>
          </property>
-         <property name="maximumSize">
-          <size>
-           <width>100</width>
-           <height>30</height>
-          </size>
-         </property>
          <property name="text">
           <string>注册</string>
          </property>
         </widget>
        </item>
        <item>
-        <spacer name="horizontalSpacer_4">
+        <spacer name="horizontalSpacer_5">
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
          </property>
@@ -304,7 +340,7 @@
       </layout>
      </item>
      <item>
-      <spacer name="verticalSpacer_3">
+      <spacer name="verticalSpacer">
        <property name="orientation">
         <enum>Qt::Vertical</enum>
        </property>
@@ -327,8 +363,6 @@
    <header>clickedlabel.h</header>
   </customwidget>
  </customwidgets>
- <resources>
-  <include location="rc.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>

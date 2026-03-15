@@ -159,16 +159,12 @@ bool MysqlDao::CheckEmail(const std::string& name, const std::string& email) {
 		if (con == nullptr) {
 			return false;
 		}
-
 		// 准备查询语句
 		std::unique_ptr<sql::PreparedStatement> pstmt(con->_con->prepareStatement("SELECT email FROM user WHERE name = ?"));
-
 		// 绑定参数
 		pstmt->setString(1, name);
-
 		// 执行查询
 		std::unique_ptr<sql::ResultSet> res(pstmt->executeQuery());
-
 		// 遍历结果集
 		while (res->next()) {
 			std::cout << "Check Email: " << res->getString("email") << std::endl;
@@ -196,17 +192,14 @@ bool MysqlDao::UpdatePwd(const std::string& name, const std::string& newpwd) {
 		if (con == nullptr) {
 			return false;
 		}
-
 		// 准备查询语句
 		std::unique_ptr<sql::PreparedStatement> pstmt(con->_con->prepareStatement("UPDATE user SET pwd = ? WHERE name = ?"));
 
 		// 绑定参数
 		pstmt->setString(2, name);
 		pstmt->setString(1, newpwd);
-
 		// 执行更新
 		int updateCount = pstmt->executeUpdate();
-
 		std::cout << "Updated rows: " << updateCount << std::endl;
 		pool_->returnConnection(std::move(con));
 		return true;
@@ -219,6 +212,7 @@ bool MysqlDao::UpdatePwd(const std::string& name, const std::string& newpwd) {
 		return false;
 	}
 }
+
 
 bool MysqlDao::CheckPwd(const std::string& email, const std::string& pwd, UserInfo& userInfo) {
 	auto con = pool_->getConnection();

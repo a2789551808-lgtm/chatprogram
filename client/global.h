@@ -72,6 +72,13 @@ enum ClickLbState{
     Selected = 1
 };
 
+struct ServerInfo{
+    QString Host;
+    QString Port;
+    QString Token;
+    int Uid;
+};
+
 extern QString gate_url_prefix;
 
 

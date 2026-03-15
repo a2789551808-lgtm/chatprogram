@@ -2,7 +2,7 @@
 #define LOGINDIALOG_H
 
 #include <QDialog>
-
+#include <global.h>
 namespace Ui {
 class LoginDialog;
 }
@@ -17,13 +17,30 @@ public:
 
 private:
     Ui::LoginDialog *ui;
+    void initHead();
+    bool checkUserValid();
+    bool checkPwdValid();
+    bool enableBtn(bool enabled);
+
+    void showTip(QString str,bool b_ok);
+    QMap<TipErr, QString> _tip_errs;
+    void AddTipErr(TipErr te,QString tips);
+    void DelTipErr(TipErr te);
+
+    void initHttpHandlers();
+    QMap<ReqId, std::function<void(const QJsonObject&)>> _handlers;
+    int _uid;
+    QString _token;
+
 signals:
     void switchRegister();
     void switchReset();
+    void sig_connect_tcp(ServerInfo);
 
-public slots:
+private slots:
+    void on_login_btn_clicked();
     void slot_forget_pwd();
-
+    void slot_login_mod_finish(ReqId id, QString res, ErrorCodes err);
 };
 
 #endif // LOGINDIALOG_H
