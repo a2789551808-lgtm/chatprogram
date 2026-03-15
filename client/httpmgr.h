@@ -29,6 +29,8 @@ private slots:
 signals:
     void sig_http_finish(ReqId id, QString res, ErrorCodes err, Modules mod);   //发送完数据后，发送这个信号通知其他模块
     void sig_reg_mod_finish(ReqId id, QString res, ErrorCodes err);
+    void sig_reset_mod_finish(ReqId id, QString res, ErrorCodes err);
+    void sig_login_mod_finish(ReqId id, QString res, ErrorCodes err);
 };
 
 #endif // HTTPMGR_H

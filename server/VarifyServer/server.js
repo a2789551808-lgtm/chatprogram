@@ -10,21 +10,16 @@ const redis_module = require('./redis')
 async function GetVarifyCode(call, callback) {  //async关键字表示这是一个异步函数，可以使用await关键字等待Promise对象的结果
     console.log("email is ", call.request.email)
     try{
-        let query_res = await redis_module.GetRedis(const_module.code_prefix+call.request.email);   //code_+邮箱地址作为key查询redis中是否存在验证码
-        console.log("query_res is ", query_res)
-        let uniqueId = query_res;
-        if(query_res ==null){
-            uniqueId = uuidv4();
-            if (uniqueId.length > 4) {
-                uniqueId = uniqueId.substring(0, 4);
-            } 
-            let bres = await redis_module.SetRedisExpire(const_module.code_prefix+call.request.email, uniqueId,600)
-            if(!bres){
-                callback(null, { email:  call.request.email,
-                    error:const_module.Errors.RedisErr
-                });
-                return;
-            }
+        let uniqueId = uuidv4();
+        if (uniqueId.length > 4) {
+            uniqueId = uniqueId.substring(0, 4);
+        }
+        let bres = await redis_module.SetRedisExpire(const_module.code_prefix+call.request.email, uniqueId,600)
+        if(!bres){
+            callback(null, { email:  call.request.email,
+                error:const_module.Errors.RedisErr
+            });
+            return;
         }
 
         console.log("uniqueId is ", uniqueId)

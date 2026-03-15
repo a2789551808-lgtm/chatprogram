@@ -180,33 +180,28 @@ void RegisterDialog::initHttpHandlers()
 
 void RegisterDialog::on_confirm_btn_clicked()
 {
-    if(ui->user_edit->text() == ""){
-        showTip(tr("用户名不能为空"), false);
+    bool valid = checkUserValid();
+    if(!valid){
         return;
     }
 
-    if(ui->email_edit->text() == ""){
-        showTip(tr("邮箱不能为空"), false);
+    valid = checkEmailValid();
+    if(!valid){
         return;
     }
 
-    if(ui->pass_edit->text() == ""){
-        showTip(tr("密码不能为空"), false);
+    valid = checkPassValid();
+    if(!valid){
         return;
     }
 
-    if(ui->confirm_edit->text() == ""){
-        showTip(tr("确认密码不能为空"), false);
+    valid = checkConfirmValid();
+    if(!valid){
         return;
     }
 
-    if(ui->confirm_edit->text() != ui->pass_edit->text()){
-        showTip(tr("密码和确认密码不匹配"), false);
-        return;
-    }
-
-    if(ui->varify_edit->text() == ""){
-        showTip(tr("验证码不能为空"), false);
+    valid = checkVarifyValid();
+    if(!valid){
         return;
     }
 
@@ -215,6 +210,13 @@ void RegisterDialog::on_confirm_btn_clicked()
     json_obj["user"] = ui->user_edit->text();
     json_obj["email"] = ui->email_edit->text();
     json_obj["passwd"] = xorString(ui->pass_edit->text());
+    // json_obj["sex"] = 0;
+
+    // int randomValue = QRandomGenerator::global()->bounded(100); // 生成0到99之间的随机整数
+    // int head_i = randomValue % heads.size();
+
+    // json_obj["icon"] = heads[head_i];
+    // json_obj["nick"] = ui->user_edit->text();
     json_obj["confirm"] = xorString(ui->confirm_edit->text());
     json_obj["varifycode"] = ui->varify_edit->text();
     HttpMgr::GetInstance()->PostHttpReq(QUrl(gate_url_prefix+"/user_register"),

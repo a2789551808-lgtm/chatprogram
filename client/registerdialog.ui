@@ -510,7 +510,7 @@
   <customwidget>
    <class>TimerBtn</class>
    <extends>QPushButton</extends>
-   <header>timerbtn.h</header>
+   <header location="global">timerbtn.h</header>
   </customwidget>
   <customwidget>
    <class>ClickedLabel</class>

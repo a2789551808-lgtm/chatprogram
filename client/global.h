@@ -57,6 +57,8 @@ enum TipErr{
 
 enum Modules{
     REGISTERMOD = 0,
+    RESETMOD = 1,
+    LOGINMOD = 2,
 };
 
 enum ErrorCodes{
