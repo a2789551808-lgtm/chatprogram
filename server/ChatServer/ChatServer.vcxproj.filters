@@ -57,7 +57,10 @@
     <ClCompile Include="MsgNode.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="UserMgr.cpp">
+    <ClCompile Include="StatusGrpcClient.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="StatusConPool.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
@@ -110,7 +113,10 @@
     <ClInclude Include="MsgNode.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="UserMgr.h">
+    <ClInclude Include="StatusGrpcClient.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="StatusConPool.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

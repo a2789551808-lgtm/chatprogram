@@ -15,3 +15,4 @@ SendNode::SendNode(const char* msg, short max_len, short msg_id) :MsgNode(max_le
 	memcpy(_data + HEAD_ID_LEN, &max_len_host, HEAD_DATA_LEN);
 	memcpy(_data + HEAD_ID_LEN + HEAD_DATA_LEN, msg, max_len);
 }
+	

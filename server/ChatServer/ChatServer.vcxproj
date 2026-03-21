@@ -138,7 +138,8 @@
     <ClCompile Include="MySqlPool.cpp" />
     <ClCompile Include="RedisConPool.cpp" />
     <ClCompile Include="RedisMgr.cpp" />
-    <ClCompile Include="UserMgr.cpp" />
+    <ClCompile Include="StatusConPool.cpp" />
+    <ClCompile Include="StatusGrpcClient.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AsioIOServicePool.h" />
@@ -157,7 +158,8 @@
     <ClInclude Include="RedisConPool.h" />
     <ClInclude Include="RedisMgr.h" />
     <ClInclude Include="Singleton.h" />
-    <ClInclude Include="UserMgr.h" />
+    <ClInclude Include="StatusConPool.h" />
+    <ClInclude Include="StatusGrpcClient.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.ini" />
