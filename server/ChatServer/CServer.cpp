@@ -1,9 +1,14 @@
 #include "CServer.h"
 #include <iostream>
 #include "AsioIOServicePool.h"
+#include "RedisMgr.h"
+#include "ConfigMgr.h"
 CServer::CServer(boost::asio::io_context& io_context, short port) :_io_context(io_context), _port(port),
 _acceptor(io_context, tcp::endpoint(tcp::v4(), port))
 {
+	auto& cfg = ConfigMgr::Inst();
+	_server_name = cfg["SelfServer"]["Name"];
+
 	cout << "Server start success, listen on port : " << _port << endl;
 	StartAccept();
 }
@@ -33,5 +38,21 @@ void CServer::StartAccept() {
 
 void CServer::ClearSession(std::string uuid) {
 	lock_guard<mutex> lock(_mutex);
-	_sessions.erase(uuid);
+
+	auto iter = _sessions.find(uuid);
+	if (iter == _sessions.end()) {
+		return;
+	}
+
+	auto session = iter->second;
+	_sessions.erase(iter);
+
+	// 仅对已登录会话做 -1
+	if (session && session->IsAuthed()) {
+		long long new_value = 0;
+		bool ok = RedisMgr::GetInstance()->HIncrBy(LOGIN_COUNT, _server_name, -1, new_value);
+		if (!ok) {
+			std::cout << "decrement login count failed, server = " << _server_name << std::endl;
+		}
+	}
 }

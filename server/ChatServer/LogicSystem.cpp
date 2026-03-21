@@ -2,7 +2,8 @@
 #include "StatusGrpcClient.h"
 #include "MysqlMgr.h"
 #include "const.h"
-
+#include "RedisMgr.h"
+#include "ConfigMgr.h"
 using namespace std;
 
 LogicSystem::LogicSystem() :_b_stop(false) {
@@ -106,6 +107,18 @@ void LogicSystem::LoginHandler(shared_ptr<CSession> session, const short& msg_id
 	}
 	else {
 		user_info = find_iter->second;
+	}
+	// 首次登录成功后 +1（同一连接重复登录不重复计数）
+	if (!session->IsAuthed()) {
+		auto& cfg = ConfigMgr::Inst();
+		std::string self_name = cfg["SelfServer"]["Name"];
+		long long new_value = 0;
+		bool ok = RedisMgr::GetInstance()->HIncrBy(LOGIN_COUNT, self_name, 1, new_value);
+		if (!ok) {
+			rtvalue["error"] = ErrorCodes::RPCFailed;
+			return;
+		}
+		session->BindUid(uid);
 	}
 
 	rtvalue["uid"] = uid;

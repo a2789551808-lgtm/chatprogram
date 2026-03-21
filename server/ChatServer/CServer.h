@@ -20,5 +20,8 @@ private:
 	tcp::acceptor _acceptor;
 	std::map<std::string, shared_ptr<CSession>> _sessions;
 	std::mutex _mutex;
+
+	// 新增：本机 chat server 名称（如 chatserver1）
+	std::string _server_name;
 };
 

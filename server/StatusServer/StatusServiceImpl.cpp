@@ -3,6 +3,7 @@
 #include "const.h"
 #include "RedisMgr.h"
 #include <climits>
+#include <limits>
 
 std::string generate_unique_string() {
     // 创建UUID对象
@@ -19,6 +20,13 @@ Status StatusServiceImpl::GetChatServer(ServerContext* context, const GetChatSer
 {
 	std::string prefix("llfc status server has received :  ");
 	const auto& server = getChatServer();
+
+	// 无可用聊天服（例如配置为空）
+	if (server.name.empty()) {
+		reply->set_error(ErrorCodes::RPCFailed);
+		return Status::OK;
+	}
+
 	reply->set_host(server.host);
 	reply->set_port(server.port);
 	reply->set_error(ErrorCodes::Success);
@@ -51,43 +59,54 @@ StatusServiceImpl::StatusServiceImpl()
 		server.host = cfg[word]["Host"];
 		server.name = cfg[word]["Name"];
 		_servers[server.name] = server;
-	}
 
+		// 初始化 Redis 连接计数字段（不存在时置 0）
+		auto cnt = RedisMgr::GetInstance()->HGet(LOGIN_COUNT, server.name);
+		if (cnt.empty()) {
+			RedisMgr::GetInstance()->HSet(LOGIN_COUNT, server.name, "0");
+		}
+	}
 }
 
 ChatServer StatusServiceImpl::getChatServer() {
 	std::lock_guard<std::mutex> guard(_server_mtx);
-	auto minServer = _servers.begin()->second;
 
-	//auto count_str = RedisMgr::GetInstance()->HGet(LOGIN_COUNT, minServer.name);
-	//if (count_str.empty()) {
-	//	//不存在则默认设置为最大
-	//	minServer.con_count = INT_MAX;
-	//}
-	//else {
-	//	minServer.con_count = std::stoi(count_str);
-	//}
+	// 防止空 map 解引用崩溃
+	if (_servers.empty()) {
+		return ChatServer();
+	}
 
+	ChatServer minServer;
+	long long minCount = std::numeric_limits<long long>::max();
+	bool hasCandidate = false;
 
-	//// 使用范围基于for循环
-	//for ( auto& server : _servers) {
-	//	
-	//	if (server.second.name == minServer.name) {
-	//		continue;
-	//	}
+	// 最小连接数策略：遍历所有 chat server，选择 LOGIN_COUNT 最小者
+	for (const auto& kv : _servers) {
+		const ChatServer& server = kv.second;
+		auto count_str = RedisMgr::GetInstance()->HGet(LOGIN_COUNT, server.name);
 
-	//	auto count_str = RedisMgr::GetInstance()->HGet(LOGIN_COUNT, server.second.name);
-	//	if (count_str.empty()) {
-	//		server.second.con_count = INT_MAX;
-	//	}
-	//	else {
-	//		server.second.con_count = std::stoi(count_str);
-	//	}
+		// Redis 中不存在计数时，视为高负载，避免优先选中未初始化/异常节点
+		long long curCount = std::numeric_limits<long long>::max();
+		if (!count_str.empty()) {
+			try {
+				curCount = std::stoll(count_str);
+			}
+			catch (...) {
+				curCount = std::numeric_limits<long long>::max();
+			}
+		}
 
-	//	if (server.second.con_count < minServer.con_count) {
-	//		minServer = server.second;
-	//	}
-	//}
+		if (!hasCandidate || curCount < minCount) {
+			minCount = curCount;
+			minServer = server;
+			hasCandidate = true;
+		}
+	}
+
+	// 理论上 hasCandidate 必定为 true；这里保底回退
+	if (!hasCandidate) {
+		return _servers.begin()->second;
+	}
 
 	return minServer;
 }

@@ -36,6 +36,11 @@ public:
 	std::shared_ptr<CSession> SharedSelf();
 	void AsyncReadBody(int length);
 	void AsyncReadHead(int total_len);
+
+	// 登录状态标记，用于连接计数 +1/-1 只执行一次
+	bool IsAuthed() const;
+	void BindUid(int uid);
+	int GetUid() const;
 private:
 	void asyncReadFull(std::size_t maxLength, std::function<void(const boost::system::error_code&, std::size_t)> handler);
 	void asyncReadLen(std::size_t  read_len, std::size_t total_len,
@@ -55,6 +60,10 @@ private:
 	bool _b_head_parse;
 	//收到的头部结构
 	std::shared_ptr<MsgNode> _recv_head_node;
+
+	// 新增
+	bool _is_authed;
+	int _uid;
 };
 
 class LogicNode {

@@ -152,7 +152,7 @@ void LoginDialog::slot_tcp_con_finish(bool bsuccess)
         QByteArray jsonString = doc.toJson(QJsonDocument::Indented);
 
         //发送tcp请求给chat server
-        TcpMgr::GetInstance()->sig_send_data(ReqId::ID_CHAT_LOGIN, jsonString);
+        emit TcpMgr::GetInstance()->sig_send_data(ReqId::ID_CHAT_LOGIN, jsonString);
 
     }else{
         showTip(tr("网络异常"),false);

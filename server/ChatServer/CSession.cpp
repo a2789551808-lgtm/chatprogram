@@ -8,7 +8,12 @@
 #include "LogicSystem.h"
 
 CSession::CSession(boost::asio::io_context& io_context, CServer* server) :
-	_socket(io_context), _server(server), _b_close(false), _b_head_parse(false) {
+	_socket(io_context),
+	_server(server),
+	_b_close(false),
+	_b_head_parse(false),
+	_is_authed(false),
+	_uid(0) {
 	boost::uuids::uuid  a_uuid = boost::uuids::random_generator()();
 	_uuid = boost::uuids::to_string(a_uuid);
 	_recv_head_node = make_shared<MsgNode>(HEAD_TOTAL_LEN);
@@ -23,6 +28,19 @@ tcp::socket& CSession::GetSocket() {
 
 std::string& CSession::GetUuid() {
 	return _uuid;
+}
+
+bool CSession::IsAuthed() const {
+	return _is_authed;
+}
+
+void CSession::BindUid(int uid) {
+	_uid = uid;
+	_is_authed = true;
+}
+
+int CSession::GetUid() const {
+	return _uid;
 }
 
 void CSession::Start() {

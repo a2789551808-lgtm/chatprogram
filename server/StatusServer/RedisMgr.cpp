@@ -282,6 +282,37 @@ std::string RedisMgr::HGet(const std::string& key, const std::string& hkey)
 }
 
 
+bool RedisMgr::HIncrBy(const std::string& key, const std::string& hkey, long long increment, long long& new_value)
+{
+    auto connect = _con_pool->getConnection();
+    if (connect == nullptr) {
+        return false;
+    }
+
+    auto reply = (redisReply*)redisCommand(connect, "HINCRBY %s %s %lld",
+        key.c_str(), hkey.c_str(), increment);
+
+    if (reply == nullptr) {
+        std::cout << "Execut command [ HINCRBY " << key << " " << hkey << " " << increment << " ] failure ! " << std::endl;
+        _con_pool->returnConnection(connect);
+        return false;
+    }
+
+    if (reply->type != REDIS_REPLY_INTEGER) {
+        std::cout << "Execut command [ HINCRBY " << key << " " << hkey << " " << increment << " ] failure ! " << std::endl;
+        freeReplyObject(reply);
+        _con_pool->returnConnection(connect);
+        return false;
+    }
+
+    new_value = reply->integer;
+    std::cout << "Execut command [ HINCRBY " << key << " " << hkey << " " << increment << " ] success ! value = " << new_value << std::endl;
+
+    freeReplyObject(reply);
+    _con_pool->returnConnection(connect);
+    return true;
+}
+
 bool RedisMgr::Del(const std::string& key)
 {
     auto connect = _con_pool->getConnection();
