@@ -1,6 +1,7 @@
 #include "mainwindow.h"
-#include <QFile>
 #include <QApplication>
+#include <QFile>
+#include "global.h"
 
 int main(int argc, char *argv[])
 {
@@ -15,15 +16,16 @@ int main(int argc, char *argv[])
         a.setStyleSheet(style);
         qss.close();
     }else{
-        qDebug("Open failed");
-    }
+         qDebug("Open failed");
+     }
+
 
     // 获取当前应用程序的路径
     QString app_path = QCoreApplication::applicationDirPath();
     // 拼接文件名
     QString fileName = "config.ini";
     QString config_path = QDir::toNativeSeparators(app_path +
-                                                   QDir::separator() + fileName);
+                             QDir::separator() + fileName);
 
     QSettings settings(config_path, QSettings::IniFormat);
     QString gate_host = settings.value("GateServer/host").toString();

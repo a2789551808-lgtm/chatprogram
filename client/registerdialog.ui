@@ -36,6 +36,19 @@
        <widget class="QWidget" name="page">
         <layout class="QVBoxLayout" name="verticalLayout_3">
          <item>
+          <spacer name="verticalSpacer">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
           <widget class="QWidget" name="widget" native="true">
            <layout class="QVBoxLayout" name="verticalLayout_4">
             <item>
@@ -52,22 +65,9 @@
           </widget>
          </item>
          <item>
-          <spacer name="verticalSpacer">
-           <property name="orientation">
-            <enum>Qt::Vertical</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>20</width>
-             <height>40</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item>
           <layout class="QHBoxLayout" name="horizontalLayout">
            <item>
-            <widget class="QLabel" name="user_lable">
+            <widget class="QLabel" name="user_label">
              <property name="minimumSize">
               <size>
                <width>0</width>
@@ -81,7 +81,7 @@
               </size>
              </property>
              <property name="text">
-              <string>用户: </string>
+              <string>用户：</string>
              </property>
             </widget>
            </item>
@@ -104,9 +104,9 @@
           </layout>
          </item>
          <item>
-          <layout class="QHBoxLayout" name="horizontalLayout_2">
+          <layout class="QHBoxLayout" name="horizontalLayout_3">
            <item>
-            <widget class="QLabel" name="email_lable">
+            <widget class="QLabel" name="email_label">
              <property name="minimumSize">
               <size>
                <width>0</width>
@@ -120,7 +120,7 @@
               </size>
              </property>
              <property name="text">
-              <string>邮箱: </string>
+              <string>邮箱：</string>
              </property>
             </widget>
            </item>
@@ -143,9 +143,9 @@
           </layout>
          </item>
          <item>
-          <layout class="QHBoxLayout" name="horizontalLayout_3">
+          <layout class="QHBoxLayout" name="horizontalLayout_4">
            <item>
-            <widget class="QLabel" name="pass_lable">
+            <widget class="QLabel" name="pass_label">
              <property name="minimumSize">
               <size>
                <width>0</width>
@@ -159,7 +159,7 @@
               </size>
              </property>
              <property name="text">
-              <string>密码: </string>
+              <string>密码：</string>
              </property>
             </widget>
            </item>
@@ -193,6 +193,9 @@
                <height>20</height>
               </size>
              </property>
+             <property name="styleSheet">
+              <string notr="true"/>
+             </property>
              <property name="text">
               <string/>
              </property>
@@ -201,9 +204,9 @@
           </layout>
          </item>
          <item>
-          <layout class="QHBoxLayout" name="horizontalLayout_4">
+          <layout class="QHBoxLayout" name="horizontalLayout_5">
            <item>
-            <widget class="QLabel" name="confirm_lable">
+            <widget class="QLabel" name="confirm_label">
              <property name="minimumSize">
               <size>
                <width>0</width>
@@ -217,7 +220,7 @@
               </size>
              </property>
              <property name="text">
-              <string>确认: </string>
+              <string>确认：</string>
              </property>
             </widget>
            </item>
@@ -251,6 +254,9 @@
                <height>20</height>
               </size>
              </property>
+             <property name="styleSheet">
+              <string notr="true"/>
+             </property>
              <property name="text">
               <string/>
              </property>
@@ -259,9 +265,9 @@
           </layout>
          </item>
          <item>
-          <layout class="QHBoxLayout" name="horizontalLayout_5">
+          <layout class="QHBoxLayout" name="horizontalLayout_6">
            <item>
-            <widget class="QLabel" name="varify_lable">
+            <widget class="QLabel" name="varify_label">
              <property name="minimumSize">
               <size>
                <width>0</width>
@@ -275,7 +281,7 @@
               </size>
              </property>
              <property name="text">
-              <string>验证码: </string>
+              <string>验证码：</string>
              </property>
             </widget>
            </item>
@@ -300,13 +306,13 @@
              <property name="minimumSize">
               <size>
                <width>0</width>
-               <height>30</height>
+               <height>25</height>
               </size>
              </property>
              <property name="maximumSize">
               <size>
                <width>16777215</width>
-               <height>30</height>
+               <height>25</height>
               </size>
              </property>
              <property name="text">
@@ -330,9 +336,9 @@
           </spacer>
          </item>
          <item>
-          <layout class="QHBoxLayout" name="horizontalLayout_6">
+          <layout class="QHBoxLayout" name="horizontalLayout_7">
            <item>
-            <widget class="QPushButton" name="confirm_btn">
+            <widget class="QPushButton" name="sure_btn">
              <property name="minimumSize">
               <size>
                <width>0</width>
@@ -389,7 +395,7 @@
        <widget class="QWidget" name="page_2">
         <layout class="QVBoxLayout" name="verticalLayout_5">
          <item>
-          <spacer name="verticalSpacer_4">
+          <spacer name="verticalSpacer_5">
            <property name="orientation">
             <enum>Qt::Vertical</enum>
            </property>
@@ -404,7 +410,7 @@
          <item>
           <widget class="QLabel" name="tip_lb">
            <property name="text">
-            <string>注册成功，5 秒后返回登录</string>
+            <string>注册成功，5 s后返回登录</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignCenter</set>
@@ -422,7 +428,7 @@
           </widget>
          </item>
          <item>
-          <spacer name="verticalSpacer_5">
+          <spacer name="verticalSpacer_6">
            <property name="orientation">
             <enum>Qt::Vertical</enum>
            </property>
@@ -436,7 +442,7 @@
          </item>
          <item>
           <widget class="QWidget" name="widget_2" native="true">
-           <layout class="QHBoxLayout" name="horizontalLayout_7">
+           <layout class="QHBoxLayout" name="horizontalLayout_2">
             <item>
              <spacer name="horizontalSpacer">
               <property name="orientation">
@@ -451,7 +457,7 @@
              </spacer>
             </item>
             <item>
-             <widget class="QPushButton" name="pushButton">
+             <widget class="QPushButton" name="return_btn">
               <property name="minimumSize">
                <size>
                 <width>0</width>
@@ -465,7 +471,7 @@
                </size>
               </property>
               <property name="text">
-               <string>返回</string>
+               <string>返回登录</string>
               </property>
              </widget>
             </item>
@@ -486,7 +492,7 @@
           </widget>
          </item>
          <item>
-          <spacer name="verticalSpacer_6">
+          <spacer name="verticalSpacer_4">
            <property name="orientation">
             <enum>Qt::Vertical</enum>
            </property>
@@ -508,14 +514,14 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>TimerBtn</class>
-   <extends>QPushButton</extends>
-   <header location="global">timerbtn.h</header>
-  </customwidget>
-  <customwidget>
    <class>ClickedLabel</class>
    <extends>QLabel</extends>
    <header>clickedlabel.h</header>
+  </customwidget>
+  <customwidget>
+   <class>TimerBtn</class>
+   <extends>QPushButton</extends>
+   <header location="global">timerbtn.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

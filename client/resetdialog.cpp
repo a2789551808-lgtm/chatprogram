@@ -14,12 +14,16 @@ ResetDialog::ResetDialog(QWidget *parent) :
     connect(ui->user_edit,&QLineEdit::editingFinished,this,[this](){
         checkUserValid();
     });
+
     connect(ui->email_edit, &QLineEdit::editingFinished, this, [this](){
         checkEmailValid();
     });
+
     connect(ui->pwd_edit, &QLineEdit::editingFinished, this, [this](){
         checkPassValid();
     });
+
+
     connect(ui->varify_edit, &QLineEdit::editingFinished, this, [this](){
          checkVarifyValid();
     });
@@ -98,6 +102,7 @@ bool ResetDialog::checkUserValid()
     return true;
 }
 
+
 bool ResetDialog::checkPassValid()
 {
     auto pass = ui->pwd_edit->text();
@@ -123,6 +128,8 @@ bool ResetDialog::checkPassValid()
 
     return true;
 }
+
+
 
 bool ResetDialog::checkEmailValid()
 {
@@ -194,7 +201,7 @@ void ResetDialog::initHandlers()
         auto email = jsonObj["email"].toString();
         showTip(tr("重置成功,点击返回登录"), true);
         qDebug()<< "email is " << email ;
-        qDebug()<< "user uid is " <<  jsonObj["uid"].toInt();
+        qDebug()<< "user uuid is " <<  jsonObj["uuid"].toString();
     });
 }
 
