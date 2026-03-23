@@ -44,15 +44,14 @@ void CServer::ClearSession(std::string session_id) {
 	if (iter == _sessions.end()) {
 		return;
 	}
-	// 删除用户会话关联关系
-	if (_sessions.find(session_id) != _sessions.end()) {
-		UserMgr::GetInstance()->RmvUserSession(_sessions[session_id]->GetUid());
-	}
+
 	auto session = iter->second;
 	_sessions.erase(iter);
 
-	// 仅对已登录会话做 -1
+	// 仅已登录会话才做用户解绑与连接数 -1
 	if (session && session->IsAuthed()) {
+		UserMgr::GetInstance()->RmvUserSession(session->GetUid());
+
 		long long new_value = 0;
 		bool ok = RedisMgr::GetInstance()->HIncrBy(LOGIN_COUNT, _server_name, -1, new_value);
 		if (!ok) {

@@ -78,37 +78,47 @@ ChatServer StatusServiceImpl::getChatServer() {
 
 	ChatServer minServer;
 	long long minCount = std::numeric_limits<long long>::max();
-	bool hasCandidate = false;
+	bool hasRedisCandidate = false;
 
-	// 最小连接数策略：遍历所有 chat server，选择 LOGIN_COUNT 最小者
+	// 优先：最小连接数策略（Redis 可用时）
 	for (const auto& kv : _servers) {
 		const ChatServer& server = kv.second;
 		auto count_str = RedisMgr::GetInstance()->HGet(LOGIN_COUNT, server.name);
 
-		// Redis 中不存在计数时，视为高负载，避免优先选中未初始化/异常节点
-		long long curCount = std::numeric_limits<long long>::max();
-		if (!count_str.empty()) {
-			try {
-				curCount = std::stoll(count_str);
-			}
-			catch (...) {
-				curCount = std::numeric_limits<long long>::max();
-			}
+		// 读不到或脏数据先跳过，后续统一走降级
+		if (count_str.empty()) {
+			continue;
 		}
 
-		if (!hasCandidate || curCount < minCount) {
-			minCount = curCount;
-			minServer = server;
-			hasCandidate = true;
+		try {
+			long long curCount = std::stoll(count_str);
+			if (!hasRedisCandidate || curCount < minCount) {
+				minCount = curCount;
+				minServer = server;
+				hasRedisCandidate = true;
+			}
+		}
+		catch (...) {
+			// 脏数据跳过，后续统一走降级
+			continue;
 		}
 	}
 
-	// 理论上 hasCandidate 必定为 true；这里保底回退
-	if (!hasCandidate) {
-		return _servers.begin()->second;
+	// Redis 有有效数据，按最小连接数返回
+	if (hasRedisCandidate) {
+		return minServer;
 	}
 
-	return minServer;
+	// 降级：Redis 故障/数据不可用时使用轮询
+	static size_t rr_index = 0;
+	size_t target = rr_index % _servers.size();
+	++rr_index;
+
+	auto it = _servers.begin();
+	for (size_t i = 0; i < target; ++i) {
+		++it;
+	}
+	return it->second;
 }
 
 Status StatusServiceImpl::Login(ServerContext* context, const LoginReq* request, LoginRsp* reply)
