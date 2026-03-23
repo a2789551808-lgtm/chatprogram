@@ -19,6 +19,9 @@ public:
     bool HSet(const char* key, const char* hkey, const char* hvalue, size_t hvaluelen);
     std::string HGet(const std::string& key, const std::string& hkey);
 
+    // 新增：删除 hash field（HDEL）
+    bool HDel(const std::string& key, const std::string& hkey);
+
     // 新增：原子自增/自减 hash field，返回自增后的值
     bool HIncrBy(const std::string& key, const std::string& hkey, long long increment, long long& new_value);
 
@@ -31,5 +34,5 @@ public:
 private:
     RedisMgr();
 
-	std::unique_ptr<RedisConPool> _con_pool;
+    std::unique_ptr<RedisConPool> _con_pool;
 };
