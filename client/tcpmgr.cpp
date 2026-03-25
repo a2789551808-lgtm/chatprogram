@@ -423,7 +423,7 @@ void TcpMgr::slot_tcp_connect(ServerInfo si)
     _socket.connectToHost(si.Host, _port);
 }
 
-void TcpMgr::slot_send_data(ReqId reqId, QByteArray dataBytes)
+void TcpMgr::slot_send_data(ReqId reqId, QByteArray dataBytes) //改成了QByteArray，QString要再转换会很麻烦，而且发送中文会乱码
 {
     uint16_t id = reqId;
 
