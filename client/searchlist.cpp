@@ -143,7 +143,7 @@ void SearchList::slot_user_search(std::shared_ptr<SearchInfo> si)
         }
         //此处先处理为添加的好友
         _find_dlg = std::make_shared<FindSuccessDlg>(this);
-        dynamic_pointer_cast<FindSuccessDlg>(_find_dlg)->SetSearchInfo(si);
+        std::dynamic_pointer_cast<FindSuccessDlg>(_find_dlg)->SetSearchInfo(si);
 
     }
     _find_dlg->show();

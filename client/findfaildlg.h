@@ -16,8 +16,6 @@ public:
     ~FindFailDlg();
 
 private slots:
-
-
     void on_fail_sure_btn_clicked();
 
 private:
