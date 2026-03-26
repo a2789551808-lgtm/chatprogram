@@ -25,6 +25,7 @@ bool RedisMgr::Get(const std::string& key, std::string& value)
     auto reply = (redisReply*)redisCommand(connect, "GET %s", key.c_str());
     if (reply == NULL) {
         std::cout << "[ GET  " << key << " ] failed" << std::endl;
+		//freeReplyObject(reply);  reply为NULL时不需要释放
         _con_pool->returnConnection(connect);
         return false;
     }
@@ -281,6 +282,35 @@ std::string RedisMgr::HGet(const std::string& key, const std::string& hkey)
     return value;
 }
 
+bool RedisMgr::HDel(const std::string& key, const std::string& hkey)
+{
+    auto connect = _con_pool->getConnection();
+    if (connect == nullptr) {
+        return false;
+    }
+
+    auto reply = (redisReply*)redisCommand(connect, "HDEL %s %s", key.c_str(), hkey.c_str());
+    if (reply == nullptr) {
+        std::cout << "Execut command [ HDEL " << key << " " << hkey << " ] failure ! " << std::endl;
+        _con_pool->returnConnection(connect);
+        return false;
+    }
+
+    // HDEL 返回整数：1=删除成功，0=字段不存在；两者都表示命令执行成功
+    if (reply->type != REDIS_REPLY_INTEGER) {
+        std::cout << "Execut command [ HDEL " << key << " " << hkey << " ] failure ! " << std::endl;
+        freeReplyObject(reply);
+        _con_pool->returnConnection(connect);
+        return false;
+    }
+
+    std::cout << "Execut command [ HDEL " << key << " " << hkey << " ] success ! removed = "
+        << reply->integer << std::endl;
+    freeReplyObject(reply);
+    _con_pool->returnConnection(connect);
+    return true;
+}
+
 
 bool RedisMgr::HIncrBy(const std::string& key, const std::string& hkey, long long increment, long long& new_value)
 {
@@ -367,3 +397,4 @@ void RedisMgr::Close()
 {
 	_con_pool->Close();
 }
+

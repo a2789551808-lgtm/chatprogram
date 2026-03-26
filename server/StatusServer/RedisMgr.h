@@ -1,6 +1,5 @@
 #pragma once
 
-#include "const.h"
 #include "RedisConPool.h"
 /*redis操作类，因为hredis提供的操作太别扭了，所以手动封装redis操作类，简化调用流程。后续*/
 
@@ -20,14 +19,20 @@ public:
     bool HSet(const char* key, const char* hkey, const char* hvalue, size_t hvaluelen);
     std::string HGet(const std::string& key, const std::string& hkey);
 
+    // 新增：删除 hash field（HDEL）
+    bool HDel(const std::string& key, const std::string& hkey);
+
     // 新增：原子自增/自减 hash field，返回自增后的值
     bool HIncrBy(const std::string& key, const std::string& hkey, long long increment, long long& new_value);
 
     bool Del(const std::string& key);
     bool ExistsKey(const std::string& key);
     void Close();
+
+    std::string acquireLock(const std::string& lockName,int lockTimeout, int acquireTimeout);
+    bool releaseLock(const std::string& lockName,const std::string& identifier);
 private:
     RedisMgr();
 
-	std::unique_ptr<RedisConPool> _con_pool;
+    std::unique_ptr<RedisConPool> _con_pool;
 };

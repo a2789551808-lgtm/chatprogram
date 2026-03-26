@@ -319,3 +319,139 @@ bool MysqlDao::GetFriendList(int self_id, std::vector<std::shared_ptr<UserInfo> 
 
 	return true;
 }
+
+bool MysqlDao::AddFriendApply(const int& from, const int& to)
+{
+	auto con = pool_->getConnection();
+	if (con == nullptr) {
+		return false;
+	}
+
+	Defer defer([this, &con]() {
+		pool_->returnConnection(std::move(con));
+		});
+
+	try {
+		// 准备SQL语句
+		std::unique_ptr<sql::PreparedStatement> pstmt(con->_con->prepareStatement("INSERT INTO friend_apply (from_uid, to_uid) values (?,?) "
+			"ON DUPLICATE KEY UPDATE from_uid = from_uid, to_uid = to_uid"));
+		pstmt->setInt(1, from); // from id
+		pstmt->setInt(2, to);
+		// 执行更新
+		int rowAffected = pstmt->executeUpdate();
+		if (rowAffected < 0) {
+			return false;
+		}
+		return true;
+	}
+	catch (sql::SQLException& e) {
+		std::cerr << "SQLException: " << e.what();
+		std::cerr << " (MySQL error code: " << e.getErrorCode();
+		std::cerr << ", SQLState: " << e.getSQLState() << " )" << std::endl;
+		return false;
+	}
+
+
+	return true;
+}
+
+bool MysqlDao::AuthFriendApply(const int& from, const int& to) {
+	auto con = pool_->getConnection();
+	if (con == nullptr) {
+		return false;
+	}
+
+	Defer defer([this, &con]() {
+		pool_->returnConnection(std::move(con));
+		});
+
+	try {
+		// 准备SQL语句
+		std::unique_ptr<sql::PreparedStatement> pstmt(con->_con->prepareStatement("UPDATE friend_apply SET status = 1 "
+			"WHERE from_uid = ? AND to_uid = ?"));
+		//反过来的申请时from，验证时to
+		pstmt->setInt(1, to); // from id
+		pstmt->setInt(2, from);
+		// 执行更新
+		int rowAffected = pstmt->executeUpdate();
+		if (rowAffected < 0) {
+			return false;
+		}
+		return true;
+	}
+	catch (sql::SQLException& e) {
+		std::cerr << "SQLException: " << e.what();
+		std::cerr << " (MySQL error code: " << e.getErrorCode();
+		std::cerr << ", SQLState: " << e.getSQLState() << " )" << std::endl;
+		return false;
+	}
+
+
+	return true;
+}
+
+bool MysqlDao::AddFriend(const int& from, const int& to, std::string back_name) {
+	auto con = pool_->getConnection();
+	if (con == nullptr) {
+		return false;
+	}
+
+	Defer defer([this, &con]() {
+		pool_->returnConnection(std::move(con));
+		});
+
+	try {
+
+		//开始事务
+		con->_con->setAutoCommit(false);
+
+		// 准备第一个SQL语句, 插入认证方好友数据
+		std::unique_ptr<sql::PreparedStatement> pstmt(con->_con->prepareStatement("INSERT IGNORE INTO friend(self_id, friend_id, back) "
+			"VALUES (?, ?, ?) "
+		));
+		//反过来的申请时from，验证时to
+		pstmt->setInt(1, from); // from id
+		pstmt->setInt(2, to);
+		pstmt->setString(3, back_name);
+		// 执行更新
+		int rowAffected = pstmt->executeUpdate();
+		if (rowAffected < 0) {
+			con->_con->rollback();
+			return false;
+		}
+
+		//准备第二个SQL语句，插入申请方好友数据
+		std::unique_ptr<sql::PreparedStatement> pstmt2(con->_con->prepareStatement("INSERT IGNORE INTO friend(self_id, friend_id, back) "
+			"VALUES (?, ?, ?) "
+		));
+		//反过来的申请时from，验证时to
+		pstmt2->setInt(1, to); // from id
+		pstmt2->setInt(2, from);
+		pstmt2->setString(3, "");
+		// 执行更新
+		int rowAffected2 = pstmt2->executeUpdate();
+		if (rowAffected2 < 0) {
+			con->_con->rollback();
+			return false;
+		}
+
+		// 提交事务
+		con->_con->commit();
+		std::cout << "addfriend insert friends success" << std::endl;
+
+		return true;
+	}
+	catch (sql::SQLException& e) {
+		// 如果发生错误，回滚事务
+		if (con) {
+			con->_con->rollback();
+		}
+		std::cerr << "SQLException: " << e.what();
+		std::cerr << " (MySQL error code: " << e.getErrorCode();
+		std::cerr << ", SQLState: " << e.getSQLState() << " )" << std::endl;
+		return false;
+	}
+
+
+	return true;
+}

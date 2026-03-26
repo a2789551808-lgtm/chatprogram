@@ -23,6 +23,10 @@ public:
 	bool GetApplyList(int touid, std::vector<std::shared_ptr<ApplyInfo>>& applyList, int offset, int limit);
 	bool GetFriendList(int self_id, std::vector<std::shared_ptr<UserInfo>>& user_info);
 
+	bool AddFriendApply(const int& from, const int& to);
+	bool AuthFriendApply(const int& from, const int& to);
+	bool AddFriend(const int& from, const int& to, std::string back_name);
+
 private:
 	std::unique_ptr<MySqlPool> pool_;
 };
