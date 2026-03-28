@@ -46,5 +46,8 @@ private:
 	std::condition_variable _consume;
 	bool _b_stop;
 	std::map<short, FunCallBack> _fun_callbacks;
+
+	//²âÊÔº¯Êı
+	void HeartBeatHandler(std::shared_ptr<CSession> session, const short& msg_id, const std::string& msg_data);
 };
 

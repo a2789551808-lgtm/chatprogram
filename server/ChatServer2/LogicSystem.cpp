@@ -81,6 +81,10 @@ void LogicSystem::RegisterCallBacks() {
 
 	_fun_callbacks[ID_AUTH_FRIEND_REQ] = std::bind(&LogicSystem::AuthFriendApply, this,
 		placeholders::_1, placeholders::_2, placeholders::_3);
+
+	//心跳请求处理
+	_fun_callbacks[ID_HEART_BEAT_REQ] = std::bind(&LogicSystem::HeartBeatHandler, this,
+		placeholders::_1, placeholders::_2, placeholders::_3);
 }
 
 void LogicSystem::LoginHandler(shared_ptr<CSession> session, const short& msg_id, const string& msg_data) {
@@ -582,4 +586,10 @@ bool LogicSystem::GetFriendApplyInfo(int to_uid, std::vector<std::shared_ptr<App
 bool LogicSystem::GetFriendList(int self_id, std::vector<std::shared_ptr<UserInfo>>& user_list) {
 	//从mysql获取好友列表
 	return MysqlMgr::GetInstance()->GetFriendList(self_id, user_list);
+}
+
+void LogicSystem::HeartBeatHandler(std::shared_ptr<CSession> session, const short& msg_id, const std::string& msg_data) {
+	Json::Value rtvalue;
+	rtvalue["error"] = ErrorCodes::Success;
+	session->Send(rtvalue.toStyledString(), ID_HEARTBEAT_RSP);
 }
