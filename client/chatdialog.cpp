@@ -626,6 +626,10 @@ void ChatDialog::slot_switch_apply_friend_page()
     qDebug()<<"receive switch apply friend page sig";
     _last_widget = ui->friend_apply_page;
     ui->stackedWidget->setCurrentWidget(ui->friend_apply_page);
+
+    // 已进入“新的朋友”页面，视为已读
+    ui->side_contact_lb->ShowRedPoint(false);
+    ui->con_user_list->ShowRedPoint(false);
 }
 
 void ChatDialog::slot_friend_info_page(std::shared_ptr<UserInfo> user_info)

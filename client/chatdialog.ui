@@ -316,7 +316,7 @@
       </size>
      </property>
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <widget class="ChatPage" name="chat_page"/>
      <widget class="ApplyFriendPage" name="friend_apply_page"/>
@@ -327,14 +327,14 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>CustomizeEdit</class>
-   <extends>QLineEdit</extends>
-   <header>customizeedit.h</header>
-  </customwidget>
-  <customwidget>
    <class>ClickedBtn</class>
    <extends>QPushButton</extends>
    <header>clickedbtn.h</header>
+  </customwidget>
+  <customwidget>
+   <class>CustomizeEdit</class>
+   <extends>QLineEdit</extends>
+   <header>customizeedit.h</header>
   </customwidget>
   <customwidget>
    <class>ChatUserList</class>
