@@ -221,3 +221,11 @@ void ChatPage::clearItems()
 {
     ui->chat_data_list->removeAllItem();
 }
+
+
+
+void ChatPage::on_title_lb_linkActivated(const QString &link)
+{
+    return;
+}
+
