@@ -18,6 +18,14 @@ MySqlPool::MySqlPool(const std::string& url, const std::string& user, const std:
 			pool_.push(std::make_unique<SqlConnection>(con, timestamp));
 		}
 
+		// 初始化后如果一个连接都没有，直接置停，避免 getConnection 永久阻塞
+		if (pool_.empty()) {
+			b_stop_ = true;
+			cond_.notify_all();
+			std::cout << "mysql pool init failed, no valid connection" << std::endl;
+			return;
+		}
+
 		_check_thread = std::thread([this]() {
 			while (!b_stop_) {
 				checkConnectionPro();
@@ -30,6 +38,8 @@ MySqlPool::MySqlPool(const std::string& url, const std::string& user, const std:
 		});
 	}
 	catch (sql::SQLException& e) {
+		b_stop_ = true;
+		cond_.notify_all();
 		std::cout << "mysql pool init failed, error is " << e.what() << std::endl;
 	}
 }

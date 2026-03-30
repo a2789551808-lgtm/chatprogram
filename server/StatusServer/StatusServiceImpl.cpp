@@ -21,7 +21,6 @@ Status StatusServiceImpl::GetChatServer(ServerContext* context, const GetChatSer
 	std::string prefix("llfc status server has received :  ");
 	const auto& server = getChatServer();
 
-	// 无可用聊天服（例如配置为空）
 	if (server.name.empty()) {
 		reply->set_error(ErrorCodes::RPCFailed);
 		return Status::OK;
@@ -32,6 +31,8 @@ Status StatusServiceImpl::GetChatServer(ServerContext* context, const GetChatSer
 	reply->set_error(ErrorCodes::Success);
 	reply->set_token(generate_unique_string());
 	insertToken(request->uid(), reply->token());
+
+
 	return Status::OK;
 }
 

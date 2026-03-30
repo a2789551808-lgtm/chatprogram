@@ -12,7 +12,7 @@ public:
 	~UserMgr();
 	std::shared_ptr<CSession> GetSession(int uid);
 	void SetUserSession(int uid, std::shared_ptr<CSession> session);
-	void RmvUserSession(int uid);
+	bool RmvUserSession(int uid, const std::shared_ptr<CSession>& session);
 private:
 	UserMgr();
 	std::mutex _session_mtx;

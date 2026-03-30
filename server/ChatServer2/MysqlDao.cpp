@@ -70,17 +70,15 @@ bool MysqlDao::CheckEmail(const std::string& name, const std::string& email) {
 
 		std::unique_ptr<sql::ResultSet> res(pstmt->executeQuery());
 
-		while (res->next()) {
-			std::cout << "Check Email: " << res->getString("email") << std::endl;
-			if (email != res->getString("email")) {
-				pool_->returnConnection(std::move(con));
-				return false;
-			}
+		if (!res->next()) {
 			pool_->returnConnection(std::move(con));
-			return true;
+			return false; // 查无用户应为 false
 		}
+
+		std::cout << "Check Email: " << res->getString("email") << std::endl;
+		bool matched = (email == res->getString("email"));
 		pool_->returnConnection(std::move(con));
-		return true;
+		return matched;
 	}
 	catch (sql::SQLException& e) {
 		pool_->returnConnection(std::move(con));
@@ -90,6 +88,7 @@ bool MysqlDao::CheckEmail(const std::string& name, const std::string& email) {
 		return false;
 	}
 }
+
 
 bool MysqlDao::UpdatePwd(const std::string& name, const std::string& newpwd) {
 	auto con = pool_->getConnection();
@@ -105,7 +104,7 @@ bool MysqlDao::UpdatePwd(const std::string& name, const std::string& newpwd) {
 		int updateCount = pstmt->executeUpdate();
 		std::cout << "Updated rows: " << updateCount << std::endl;
 		pool_->returnConnection(std::move(con));
-		return true;
+		return updateCount > 0;
 	}
 	catch (sql::SQLException& e) {
 		pool_->returnConnection(std::move(con));
@@ -127,22 +126,20 @@ bool MysqlDao::CheckPwd(const std::string& name, const std::string& pwd, UserInf
 		});
 
 	try {
-		std::unique_ptr<sql::PreparedStatement> pstmt(con->_con->prepareStatement("SELECT * FROM user WHERE name = ?"));
+		std::unique_ptr<sql::PreparedStatement> pstmt(con->_con->prepareStatement("SELECT uid, name, email, pwd FROM user WHERE name = ?"));
 		pstmt->setString(1, name);
 
 		std::unique_ptr<sql::ResultSet> res(pstmt->executeQuery());
-		std::string origin_pwd = "";
-
-		while (res->next()) {
-			origin_pwd = res->getString("pwd");
-			std::cout << "Password: " << origin_pwd << std::endl;
-			break;
+		if (!res->next()) {
+			return false;
 		}
 
+		const std::string origin_pwd = res->getString("pwd");
 		if (pwd != origin_pwd) {
 			return false;
 		}
-		userInfo.name = name;
+
+		userInfo.name = res->getString("name");
 		userInfo.email = res->getString("email");
 		userInfo.uid = res->getInt("uid");
 		userInfo.pwd = origin_pwd;

@@ -72,7 +72,13 @@ GetVarifyRsp VerifyGrpcClient::GetVarifyCode(std::string email)
     GetVarifyRsp reply;
     GetVarifyReq request;
     request.set_email(email);
+
 	auto stub = pool_->getConnection();
+    if (!stub) {
+        reply.set_error(ErrorCodes::RPCFailed);
+        return reply;
+    }
+
     Status status = stub->GetVarifyCode(&context, request, &reply);
 
     if (status.ok()) {

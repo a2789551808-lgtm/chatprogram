@@ -48,14 +48,15 @@ void CServer::ClearSession(std::string session_id) {
 	auto session = iter->second;
 	_sessions.erase(iter);
 
-	// 仅已登录会话才做用户解绑与连接数 -1
+	// 已登录会话断开时，只有确实移除了该 uid 的“当前会话映射”才做 -1
 	if (session && session->IsAuthed()) {
-		UserMgr::GetInstance()->RmvUserSession(session->GetUid());
-
-		long long new_value = 0;
-		bool ok = RedisMgr::GetInstance()->HIncrBy(LOGIN_COUNT, _server_name, -1, new_value);
-		if (!ok) {
-			std::cout << "decrement login count failed, server = " << _server_name << std::endl;
+		bool removed = UserMgr::GetInstance()->RmvUserSession(session->GetUid(), session);
+		if (removed) {
+			long long new_value = 0;
+			bool ok = RedisMgr::GetInstance()->HIncrBy(LOGIN_COUNT, _server_name, -1, new_value);
+			if (!ok) {
+				std::cout << "decrement login count failed, server = " << _server_name << std::endl;
+			}
 		}
 	}
 }

@@ -12,6 +12,10 @@ RedisConPool::RedisConPool(size_t poolSize, const char* host, int port, const ch
         }
 
         auto reply = (redisReply*)redisCommand(context, "AUTH %s", pwd);
+        if (reply == nullptr) {
+            redisFree(context);
+            continue;
+        }
         if (reply->type == REDIS_REPLY_ERROR) {
             std::cout << "认证失败" << std::endl;
             //执行成功 释放redisCommand执行后返回的redisReply所占用的内存
@@ -29,9 +33,14 @@ RedisConPool::RedisConPool(size_t poolSize, const char* host, int port, const ch
 }
 
 RedisConPool::~RedisConPool() {
+    Close();
     std::lock_guard<std::mutex> lock(mutex_);
     while (!connections_.empty()) {
+        auto* context = connections_.front();
         connections_.pop();
+        if (context != nullptr) {
+            redisFree(context);
+        }
     }
 }
 
@@ -53,6 +62,9 @@ redisContext* RedisConPool::getConnection() {
 }
 
 void RedisConPool::returnConnection(redisContext* context) {
+    if (context == nullptr) {
+        return;
+    }
     std::lock_guard<std::mutex> lock(mutex_);
     if (b_stop_) {
         return;
