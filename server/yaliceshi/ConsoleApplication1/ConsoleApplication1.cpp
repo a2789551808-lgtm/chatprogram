@@ -25,6 +25,9 @@ struct Options {
 	int durationSec = 60;
 	int intervalMs = 1000;
 	std::string mode = "connect"; // connect | ping
+    
+	// 新增：每次建连操作之间的间隔（毫秒），避免瞬间打满服务端 Backlog 队列
+	int connectDelayMs = 2; 
 };
 
 struct Stats {
@@ -108,11 +111,20 @@ static void worker(int idx, const Options& opt, int connCount, Stats& st) {
 		s->connect(ep, ec);
 		if (ec) {
 			st.connectFail.fetch_add(1);
+			// 即使失败也建议等待，防止失败后死循环疯狂重试耗尽资源
+			if (opt.connectDelayMs > 0) {
+				std::this_thread::sleep_for(std::chrono::milliseconds(opt.connectDelayMs));
+			}
 			continue;
 		}
 		s->set_option(tcp::no_delay(true), ec);
 		sockets.push_back(std::move(s));
 		st.connectOk.fetch_add(1);
+
+		// 成功建立一个连接后，稍微休眠一下再建下一个，做 Ramp-up 放缓节奏
+		if (opt.connectDelayMs > 0) {
+			std::this_thread::sleep_for(std::chrono::milliseconds(opt.connectDelayMs));
+		}
 	}
 
 	auto endTime = std::chrono::steady_clock::now() + std::chrono::seconds(opt.durationSec);
@@ -184,6 +196,7 @@ static void parse_args(int argc, char* argv[], Options& opt) {
 		else if (k == "--duration") opt.durationSec = std::atoi(v.c_str());
 		else if (k == "--interval") opt.intervalMs = std::atoi(v.c_str());
 		else if (k == "--mode") opt.mode = v;
+		else if (k == "--connect-delay") opt.connectDelayMs = std::atoi(v.c_str());
 	}
 }
 
