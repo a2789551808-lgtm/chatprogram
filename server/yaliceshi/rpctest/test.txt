@@ -1,0 +1,81 @@
+#include iostream
+#include thread
+#include vector
+#include chrono
+#include atomic
+#include ChatConPool.h
+
+using namespace std;
+using namespace stdchrono;
+
+ 统计成功和失败的请求数
+atomicint success_count(0);
+atomicint fail_count(0);
+
+ 单个线程的工作函数：疯狂发起 RPC 请求
+void WorkerThread(ChatConPool pool, int requests_per_thread) {
+    for (int i = 0; i  requests_per_thread; ++i) {
+         1. 从连接池获取连接
+        auto stub = pool-getConnection();
+        if (!stub) continue;
+
+         2. 构造普通的 RPC 请求 (根据你实际的 message.proto 替换)
+         假设这里测试发送文本消息的方法 
+        messageTextChatMsgReq req;
+         req.set_uid(10086); ...
+        messageTextChatMsgRsp rsp;
+        grpcClientContext context;
+
+         3. 发起调用
+        grpcStatus status = stub-NotifyTextChatMsg(&context, req, &rsp);  替换成你实际的存根方法
+
+         4. 还回连接池
+        pool-returnConnection(stdmove(stub));
+
+        if (status.ok()) {
+            success_count++;
+        } else {
+            fail_count++;
+        }
+    }
+}
+
+int main() {
+    int thread_num = 50;            模拟 50 个高并发业务线程
+    int req_per_thread = 5000;      每个线程发起 5000 次调用
+    int total_requests = thread_num  req_per_thread;
+
+    cout  正在初始化 GPRC 连接池...  endl;
+     这里故意试一试：改为 1 测单通道，改为 8 测多通道
+    ChatConPool pool(8, 127.0.0.1, 50051); 
+    
+     预热一小会，等底层 TCP 建立
+    this_threadsleep_for(seconds(2)); 
+
+    cout  开始压测，总请求量   total_requests  endl;
+    auto start_time = high_resolution_clocknow();
+
+     启动多线程并发
+    vectorthread threads;
+    for (int i = 0; i  thread_num; ++i) {
+        threads.emplace_back(WorkerThread, &pool, req_per_thread);
+    }
+
+     等待所有线程执行完毕
+    for (auto& t  threads) {
+        t.join();
+    }
+
+    auto end_time = high_resolution_clocknow();
+    auto duration = duration_castmilliseconds(end_time - start_time).count();
+
+     打印压测报告
+    cout  ====== 压测结果 ======  endl;
+    cout  总耗时   duration   ms  endl;
+    cout  成功数   success_count  , 失败数   fail_count  endl;
+    if (duration  0) {
+        cout  QPS (每秒吞吐量)   (total_requests  1000LL  duration)   reqs  endl;
+    }
+    
+    return 0;
+}

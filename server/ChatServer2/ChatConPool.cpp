@@ -1,12 +1,17 @@
 #include "ChatConPool.h"
+#include <grpcpp/grpcpp.h> // 确保引入了头文件
 
 ChatConPool::ChatConPool(size_t poolSize, std::string host, std::string port) 
 	: poolSize_(poolSize), host_(host), port_(port), b_stop_(false)
 {
 	for (size_t i = 0; i < poolSize_; ++i) {
+		grpc::ChannelArguments args;
+		//关闭全局 Subchannel Pool，强行要求每个 Channel 建立独立的底层 TCP 连接
+		args.SetInt(GRPC_ARG_USE_LOCAL_SUBCHANNEL_POOL, 1);
 
-		std::shared_ptr<Channel> channel = grpc::CreateChannel(host + ":" + port,
-			grpc::InsecureChannelCredentials());
+		// 使用 CreateCustomChannel，将 args 传进去
+		std::shared_ptr<Channel> channel = grpc::CreateCustomChannel(
+			host + ":" + port, grpc::InsecureChannelCredentials(), args);
 
 		connections_.push(ChatService::NewStub(channel));
 	}
